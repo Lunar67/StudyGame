@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phrase to Noun Game</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .section { margin-bottom: 30px; }
+    input, select, button { padding: 8px; margin: 5px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Phrase to Noun Game</h1>
+
+  <div class="section">
+    <h2>Add New Phrase</h2>
+    <input type="text" id="newPhrase" placeholder="Enter phrase" />
+    <input type="text" id="newNoun" placeholder="Enter noun" />
+    <input type="text" id="newCategory" placeholder="Enter category" />
+    <button onclick="addPhrase()">Add Phrase</button>
+  </div>
+
+  <div class="section">
+    <h2>Play Game</h2>
+    <label for="categorySelect">Select Category:</label>
+    <select id="categorySelect" onchange="startGame()"></select>
+    <p id="phrase"></p>
+    <input type="text" id="userInput" placeholder="Enter the noun" />
+    <button onclick="checkAnswer()">Submit</button>
+    <p id="feedback"></p>
+  </div>
+
+  <script>
+    let phrases = JSON.parse(localStorage.getItem("phrases")) || [];
+
+    function savePhrases() {
+      localStorage.setItem("phrases", JSON.stringify(phrases));
+    }
+
+    function addPhrase() {
+      const phrase = document.getElementById("newPhrase").value.trim();
+      const noun = document.getElementById("newNoun").value.trim();
+      const category = document.getElementById("newCategory").value.trim();
+
+      if (phrase && noun && category) {
+        phrases.push({ phrase, noun, category });
+        savePhrases();
+        updateCategoryDropdown();
+        alert("Phrase added!");
+        document.getElementById("newPhrase").value = "";
+        document.getElementById("newNoun").value = "";
+        document.getElementById("newCategory").value = "";
+      }
+    }
+
+    function updateCategoryDropdown() {
+      const dropdown = document.getElementById("categorySelect");
+      const categories = [...new Set(phrases.map(p => p.category))];
+      dropdown.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+      if (categories.length) startGame();
+    }
+
+    let currentSet = [];
+    let currentIndex = 0;
+
+    function startGame() {
+      const selectedCategory = document.getElementById("categorySelect").value;
+      currentSet = phrases.filter(p => p.category === selectedCategory);
+      currentIndex = 0;
+      showPhrase();
+    }
+
+    function showPhrase() {
+      if (currentSet.length === 0) return;
+      document.getElementById("phrase").textContent = currentSet[currentIndex].phrase;
+      document.getElementById("userInput").value = "";
+      document.getElementById("feedback").textContent = "";
+    }
+
+    function checkAnswer() {
+      const userInput = document.getElementById("userInput").value.trim().toLowerCase();
+      const correct = currentSet[currentIndex].noun.toLowerCase();
+      const feedback = document.getElementById("feedback");
+
+      if (userInput === correct) {
+        feedback.textContent = "✅ Correct!";
+      } else {
+        feedback.textContent = `❌ Incorrect. The correct noun was "${correct}".`;
+      }
+
+      currentIndex = (currentIndex + 1) % currentSet.length;
+      setTimeout(showPhrase, 2000);
+    }
+
+    // Initialize
+    updateCategoryDropdown();
+  </script>
+</body>
+</html>
