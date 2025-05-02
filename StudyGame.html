@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Phrase to Noun Game</title>
+  <title>Õppemäng</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     .section { margin-bottom: 30px; }
@@ -9,23 +9,23 @@
   </style>
 </head>
 <body>
-  <h1>Phrase to Noun Game</h1>
+  <h1>Õppemäng</h1>
 
   <div class="section">
-    <h2>Add New Phrase</h2>
+    <h2>Lisa uus mõiste</h2>
     <input type="text" id="newPhrase" placeholder="Enter phrase" />
     <input type="text" id="newNoun" placeholder="Enter noun" />
     <input type="text" id="newCategory" placeholder="Enter category" />
-    <button onclick="addPhrase()">Add Phrase</button>
+    <button onclick="addPhrase()">Lisa mõiste</button>
   </div>
 
   <div class="section">
-    <h2>Play Game</h2>
-    <label for="categorySelect">Select Category:</label>
-    <select id="categorySelect" onchange="startGame()"></select>
+    <h2>Mängi</h2>
+    <label for="categorySelect">Vali kategooria:</label>
+    <select id="categorySelect" onchange="playGame()"></select>
     <p id="phrase"></p>
     <input type="text" id="userInput" placeholder="Enter the noun" />
-    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="checkAnswer()">Sisesta</button>
     <p id="feedback"></p>
   </div>
 
@@ -36,7 +36,7 @@
       localStorage.setItem("phrases", JSON.stringify(phrases));
     }
 
-    function addPhrase() {
+    function addmõiste() {
       const phrase = document.getElementById("newPhrase").value.trim();
       const noun = document.getElementById("newNoun").value.trim();
       const category = document.getElementById("newCategory").value.trim();
